@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--zy 自定义spinner的key属性-->
+    <declare-styleable name="SimpleSpinner">
+        <attr name="simple_spinner_keys" format="reference" />
+    </declare-styleable>
+</resources>
