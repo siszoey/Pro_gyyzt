@@ -7,6 +7,10 @@ import android.widget.LinearLayout;
 
 import com.lib.bandaid.activity.BaseActivity;
 import com.lib.bandaid.arcruntime.core.ArcMap;
+import com.lib.bandaid.arcruntime.core.ToolContainer;
+import com.lib.bandaid.arcruntime.tools.ZoomIn;
+import com.lib.bandaid.arcruntime.tools.ZoomOut;
+import com.lib.bandaid.widget.base.EGravity;
 import com.lib.bandaid.widget.drag.CustomDrawerLayout;
 import com.titan.gyyzt.R;
 import com.titan.gyyzt.map.ui.frame.FrameLayer;
@@ -17,6 +21,8 @@ import com.titan.gyyzt.map.ui.frame.FrameMenu;
  */
 
 public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
+
+
     CustomDrawerLayout drawerLayout;
     LinearLayout menuRight, menuLeft;
     FrameLayout mainFrame;
@@ -24,9 +30,13 @@ public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
     FrameMenu frameMenu;
     ArcMap arcMap;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ToolContainer.registerTool("辅助", EGravity.LEFT_BOTTOM, ZoomIn.class, ZoomOut.class);
+
         setContentView(R.layout.map_ui_aty_map);
     }
 

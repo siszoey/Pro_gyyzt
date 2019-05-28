@@ -5,7 +5,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
-import com.esri.arcgisruntime.mapping.view.MapView;
 import com.lib.bandaid.arcruntime.core.ArcMap;
 
 /**

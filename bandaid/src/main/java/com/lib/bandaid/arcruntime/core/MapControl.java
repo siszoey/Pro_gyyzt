@@ -30,6 +30,14 @@ public class MapControl extends BaseContainer {
 
     private LocationDisplay locationDisplay;
 
+    public void zoomIn() {
+        mapView.setViewpointScaleAsync(mapView.getMapScale() * 0.5);
+    }
+
+    public void zoomOut() {
+        mapView.setViewpointScaleAsync(mapView.getMapScale() * 2);
+    }
+
     public void zoomG(Geometry... geometries) {
         if (geometries == null) return;
         List<Geometry> list = CollectUtil.array2List(geometries);
