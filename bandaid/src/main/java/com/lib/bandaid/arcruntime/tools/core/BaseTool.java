@@ -128,13 +128,13 @@ public abstract class BaseTool implements IP, ITool, ToolView.IClick, IArcMapEve
 
     @Override
     public void activate() {
-        arcMap.getTocContainer().activate(this);
+        arcMap.getToolContainer().activate(this);
     }
 
     @Override
     public void deactivate() {
         if (view != null) view.setChecked(false);
-        arcMap.getTocContainer().deactivate(this);
+        arcMap.getToolContainer().deactivate(this);
     }
 
     @Override

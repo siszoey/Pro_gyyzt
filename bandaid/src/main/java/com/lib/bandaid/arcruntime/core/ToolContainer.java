@@ -1,6 +1,7 @@
 package com.lib.bandaid.arcruntime.core;
 
 import com.esri.arcgisruntime.layers.Layer;
+import com.lib.bandaid.arcruntime.event.IArcMapEvent;
 import com.lib.bandaid.arcruntime.tools.core.BaseTool;
 import com.lib.bandaid.arcruntime.tools.core.ToolGroup;
 import com.lib.bandaid.widget.base.EGravity;
@@ -81,11 +82,11 @@ public class ToolContainer extends BaseContainer {
 
     @Override
     public void activate(Object o) {
-        super.activate(o);
+        if (o instanceof IArcMapEvent) arcMap.setEvent((IArcMapEvent) o);
     }
 
     @Override
     public void deactivate(Object o) {
-        super.deactivate(o);
+        arcMap.setEvent(null);
     }
 }

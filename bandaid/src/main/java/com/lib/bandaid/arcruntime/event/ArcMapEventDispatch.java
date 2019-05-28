@@ -17,7 +17,6 @@ public class ArcMapEventDispatch extends DefaultMapViewOnTouchListener {
         super(arcMap.getContext(), arcMap.getMapView());
     }
 
-    
 
     private IArcMapEvent iMapEvent;
 
@@ -32,85 +31,99 @@ public class ArcMapEventDispatch extends DefaultMapViewOnTouchListener {
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onDoubleTap(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onDoubleTap(e)) return true;
         return super.onDoubleTap(e);
     }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onDoubleTapEvent(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onDoubleTapEvent(e)) return true;
         return super.onDoubleTapEvent(e);
     }
 
     @Override
     public boolean onDoubleTouchDrag(MotionEvent event) {
-        if (iMapEvent != null) return iMapEvent.onDoubleTouchDrag(event);
+        if (iMapEvent != null)
+            if (iMapEvent.onDoubleTouchDrag(event)) return true;
         return super.onDoubleTouchDrag(event);
     }
 
     @Override
     public boolean onDown(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onDown(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onDown(e)) return true;
         return super.onDown(e);
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (iMapEvent != null) return iMapEvent.onFling(e1, e2, velocityX, velocityY);
+        if (iMapEvent != null)
+            if (iMapEvent.onFling(e1, e2, velocityX, velocityY)) return true;
         return super.onFling(e1, e2, velocityX, velocityY);
     }
 
     @Override
     public boolean onMultiPointerTap(MotionEvent event) {
-        if (iMapEvent != null) return iMapEvent.onMultiPointerTap(event);
+        if (iMapEvent != null)
+            if (iMapEvent.onMultiPointerTap(event)) return true;
         return super.onMultiPointerTap(event);
     }
 
     @Override
     public boolean onRotate(MotionEvent event, double rotationAngle) {
-        if (iMapEvent != null) return iMapEvent.onRotate(event, rotationAngle);
+        if (iMapEvent != null)
+            if (iMapEvent.onRotate(event, rotationAngle)) return true;
         return super.onRotate(event, rotationAngle);
     }
 
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        if (iMapEvent != null) return iMapEvent.onScale(detector);
+        if (iMapEvent != null)
+            if (iMapEvent.onScale(detector)) return true;
         return super.onScale(detector);
     }
 
     @Override
     public boolean onScaleBegin(ScaleGestureDetector detector) {
-        if (iMapEvent != null) return iMapEvent.onScaleBegin(detector);
+        if (iMapEvent != null)
+            if (iMapEvent.onScaleBegin(detector)) return true;
         return super.onScaleBegin(detector);
     }
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (iMapEvent != null) return iMapEvent.onScroll(e1, e2, distanceX, distanceY);
+        if (iMapEvent != null)
+            if (iMapEvent.onScroll(e1, e2, distanceX, distanceY)) return true;
         return super.onScroll(e1, e2, distanceX, distanceY);
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onSingleTapConfirmed(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onSingleTapConfirmed(e)) return true;
         return super.onSingleTapConfirmed(e);
     }
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onSingleTapUp(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onSingleTapUp(e)) return true;
         return super.onSingleTapUp(e);
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (iMapEvent != null) return iMapEvent.onTouch(view, event);
+        if (iMapEvent != null)
+            if (iMapEvent.onTouch(view, event)) return true;
         return super.onTouch(view, event);
     }
 
     @Override
     public boolean onUp(MotionEvent e) {
-        if (iMapEvent != null) return iMapEvent.onUp(e);
+        if (iMapEvent != null)
+            if (iMapEvent.onUp(e)) return true;
         return super.onUp(e);
     }
 

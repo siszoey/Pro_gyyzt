@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.lib.bandaid.activity.BaseActivity;
 import com.lib.bandaid.arcruntime.core.ArcMap;
 import com.lib.bandaid.arcruntime.core.ToolContainer;
+import com.lib.bandaid.arcruntime.tools.ToolSel;
 import com.lib.bandaid.arcruntime.tools.ZoomIn;
 import com.lib.bandaid.arcruntime.tools.ZoomOut;
 import com.lib.bandaid.widget.base.EGravity;
@@ -36,6 +37,8 @@ public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
         super.onCreate(savedInstanceState);
 
         ToolContainer.registerTool("辅助", EGravity.LEFT_BOTTOM, ZoomIn.class, ZoomOut.class);
+        ToolContainer.registerTool("通用", EGravity.RIGHT_BOTTOM, ToolSel.class);
+
 
         setContentView(R.layout.map_ui_aty_map);
     }
