@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvLayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_view_rounded_image"
+        android:drawableLeft="@drawable/menu_tckz"
+        android:drawablePadding="@dimen/padingd_10"
+        android:padding="@dimen/padingd_10"
+        android:text="图层控制"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/tvLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_view_rounded_image"
+        android:drawableLeft="@drawable/menu_zbdw"
+        android:drawablePadding="@dimen/padingd_10"
+        android:padding="@dimen/padingd_10"
+        android:text="坐标定位"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/tvTrail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_view_rounded_image"
+        android:drawableLeft="@drawable/menu_gjcx"
+        android:drawablePadding="@dimen/padingd_10"
+        android:padding="@dimen/padingd_10"
+        android:text="轨迹查询"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/tvExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_view_rounded_image"
+        android:drawableLeft="@drawable/exit_app"
+        android:drawablePadding="@dimen/padingd_10"
+        android:padding="@dimen/padingd_10"
+        android:text="退出系统"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+</LinearLayout>

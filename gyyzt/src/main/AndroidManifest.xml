@@ -36,7 +36,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <application
-        android:name=".Myapplication"
+        android:name=".system.app.MapApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -48,14 +48,26 @@
             android:name=".MainActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+          <!--  <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+
+        <activity
+            android:name=".map.ui.aty.MapActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".base.permission.PermissionsActivity" />
-        <activity android:name=".layerManage.activity.VectorActivity"/>
+        <activity android:name=".layerManage.activity.VectorActivity" />
     </application>
 
 </manifest>

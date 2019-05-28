@@ -1,10 +1,10 @@
-package com.titan.gyyzt;
+package com.titan.gyyzt.system.app;
 
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-public class Myapplication extends Application {
+public class MapApplication extends Application {
 
     @Override
     public void onCreate() {

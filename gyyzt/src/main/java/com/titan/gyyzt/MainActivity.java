@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
@@ -29,6 +30,7 @@ import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.SublayerList;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.titan.baselibrary.treerecyclerview.adpater.TreeRecyclerAdapter;
@@ -162,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
         _locDisplay.startAsync();
         // 设置位置变化监听
         _locDisplay.addLocationChangedListener(this);
-
     }
 
     @Override
@@ -219,19 +220,26 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
     }
 
     @OnClick({R.id.tv_menu, R.id.tucengkongzhi, R.id.layermanage_close, R.id.baselayer_location,
-            R.id.baselayer_ctv, R.id.isearche, R.id.ceju, R.id.cemian, R.id.mylocation,R.id.baselayer_image})
+            R.id.baselayer_ctv, R.id.isearche, R.id.ceju, R.id.cemian, R.id.mylocation, R.id.baselayer_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.baselayer_image:
                 baselayerImage.toggle();
-                if(baselayerImage.isChecked()){
+                if (baselayerImage.isChecked()) {
                     imageRecyc.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     imageRecyc.setVisibility(View.GONE);
                 }
 
                 break;
             case R.id.isearche:
+                mapview.setOnTouchListener(new DefaultMapViewOnTouchListener(_context,mapview){
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        ToastUtil.setToast(_context,"地图事件");
+                        return super.onSingleTapConfirmed(e);
+                    }
+                });
                 break;
             case R.id.ceju:
                 break;
@@ -333,19 +341,20 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
             //因为外部和内部会冲突
             final TreeItem item = vectorAdapter.getData(position);
             if (item instanceof VectorGroupItem) {
-
                 VectorBean bean = vectorBeans.get(position);
                 boolean flag = bean.isVisible();
-
-                if(flag){
+                if (flag) {
                     ((VectorGroupItem) item).setExpand(false);
                     bean.setVisible(false);
-                }else{
+                } else {
+                    int count = ((VectorGroupItem) item).getExpandChild().size();
+                    if (count != 0) return;
+
                     String url = bean.getPath();
                     final ArcGISMapImageLayer layer = new ArcGISMapImageLayer(url);
                     mapview.getMap().getOperationalLayers().add(layer);
 
-                    layer.setVisible(false);
+                    layer.setVisible(true);
                     bean.setLayer(layer);
 
                     layer.addDoneLoadingListener(new Runnable() {
@@ -353,24 +362,20 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
                         public void run() {
                             LoadStatus loadStatus = layer.getLoadStatus();
                             if (loadStatus == LoadStatus.LOADED) {
-
                                 bean.setVisible(true);
-
                                 ArrayList<SublayerBean> list = new ArrayList<>();
-
                                 SublayerList sublayers = layer.getSublayers();
                                 for (ArcGISSublayer sublayer : sublayers) {
                                     SublayerBean sublayerBean = new SublayerBean();
                                     sublayerBean.setName(sublayer.getName());
+                                    sublayer.setVisible(false);
                                     sublayerBean.setVisible(sublayer.isVisible());
                                     sublayerBean.setLayer(sublayer);
                                     list.add(sublayerBean);
                                 }
-
                                 List<TreeItem> childItems = ItemHelperFactory.createItems(list, VectorItem.class, (VectorGroupItem) item);
                                 ((VectorGroupItem) item).setExpand(true);
                                 ((VectorGroupItem) item).setChild(childItems);
-
                                 Log.e("=============", childItems.size() + "");
                             } else if (loadStatus == LoadStatus.FAILED_TO_LOAD) {
                                 Log.e("=============", "图层加载失败");
@@ -475,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
     /**
      * 缩放到图层
      */
-    public void zoomTolayer(SublayerBean bean,int position) {
+    public void zoomTolayer(SublayerBean bean, int position) {
         if (bean == null) {
             ToastUtil.setToast(_context, "图层未加载");
             return;
@@ -486,7 +491,7 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
 
             if (sublayerInfo != null) {
                 Envelope extent = sublayerInfo.getExtent();
-                if(extent != null){
+                if (extent != null) {
                     mapview.setViewpointGeometryAsync(extent);
                 }
             }
@@ -500,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
         }
     }
 
-    public void addVectorLayer(View view, SublayerBean bean,int position) {
+    public void addVectorLayer(View view, SublayerBean bean, int position) {
 
         CheckedTextView checkedTextView = (CheckedTextView) view;
         checkedTextView.toggle();
@@ -510,7 +515,6 @@ public class MainActivity extends AppCompatActivity implements IBase, LocationDi
         bean.getLayer().setVisible(flag);
 
     }
-
 
 
 }
