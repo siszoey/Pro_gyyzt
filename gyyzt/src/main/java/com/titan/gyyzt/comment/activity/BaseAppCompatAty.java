@@ -33,7 +33,6 @@ public abstract class BaseAppCompatAty extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(setLayoutView());
-        //ButterKnife.bind(this);
         initTitle();
         initView();
     }

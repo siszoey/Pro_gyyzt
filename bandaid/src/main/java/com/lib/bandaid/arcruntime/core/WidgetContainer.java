@@ -34,6 +34,13 @@ public class WidgetContainer extends BaseContainer {
         _registerList.add(widget);
     }
 
+    public static void registerWidget(Class<? extends BaseMapWidget> clazz) {
+        Map widget = new HashMap();
+        widget.put("clazz", clazz);
+        widget.put("params", new Object[]{});
+        _registerList.add(widget);
+    }
+
 
     private Map<String, BaseMapWidget> widgetMap = new HashMap<>();
 
@@ -42,10 +49,7 @@ public class WidgetContainer extends BaseContainer {
     @Override
     public void create(ArcMap arcMap) {
         super.create(arcMap);
-        rootView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.band_aid_core_widget_layout, null);
-        arcMap.removeView(rootView);
-        arcMap.addView(rootView);
-
+        rootView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.band_aid_core_widget_layout, arcMap);
         for (Map map : _registerList) {
             initWidget(map);
         }
@@ -73,6 +77,25 @@ public class WidgetContainer extends BaseContainer {
         mapWidget.create(arcMap);
         widgetMap.put(mapWidget.getClass().getName(), mapWidget);
         rootView.addView(mapWidget.getView());
+    }
+
+    public void addWidget(BaseMapWidget mapWidget) {
+        if (mapWidget == null) return;
+        mapWidget.create(arcMap);
+        widgetMap.put(mapWidget.getClass().getName(), mapWidget);
+        rootView.addView(mapWidget.getView());
+    }
+
+    public void removeWidget(BaseMapWidget mapWidget) {
+        if (mapWidget == null) return;
+        mapWidget.onDestroy();
+        widgetMap.remove(mapWidget.getClass().getName());
+        rootView.removeView(mapWidget.getView());
+    }
+
+    public BaseMapWidget getWidget(Class clazz) {
+        String name = clazz.getName();
+        return widgetMap.get(name);
     }
 
     protected void addToolGroup(ToolGroup toolGroup) {

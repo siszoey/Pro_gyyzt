@@ -5,8 +5,11 @@ package com.titan.gyyzt.config;
  */
 
 public class Config_dev {
+
+
     public final static String APP_ARC_MAP_BASE = "http://222.85.147.144:6080/arcgis/rest/services/GYLY_PUBCDATA/GYS_JCDL/MapServer";
     public final static String APP_ARC_MAP_SERVICE = "http://222.85.147.144:6080/arcgis/rest/services/GYLY_BASEDATA/LDLJXB/MapServer";
+
 
 
     public final static String APP_ARC_MAP_SERVICE_2013 = "http://222.85.147.93:6080/arcgis/rest/services/GYSLFHService/ImageMap/MapServer";

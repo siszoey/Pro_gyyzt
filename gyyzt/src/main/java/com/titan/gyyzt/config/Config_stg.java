@@ -5,4 +5,5 @@ package com.titan.gyyzt.config;
  */
 
 public class Config_stg {
+
 }

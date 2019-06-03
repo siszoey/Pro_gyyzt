@@ -2,6 +2,7 @@ package com.lib.bandaid.arcruntime.core;
 
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -35,7 +36,6 @@ public class TocContainer extends BaseContainer {
                 public void run() {
                     if (layer.getLoadStatus() == LoadStatus.LOADED) {
                         LayerNode node = new Parser(layer).getLayerNode();
-                        //node.setVisible(true);
                         addLayerNode(node);
                         notifyLayerLoad(node);
                     }
@@ -58,32 +58,6 @@ public class TocContainer extends BaseContainer {
         }
     }
 
-    public Layer getLayerById(String id) {
-        return layers.get(id);
-    }
-
-    public FeatureLayer getFeatureLayerById(String id) {
-        Layer layer = layers.get(id);
-        if (layer == null) return null;
-        if (layer instanceof FeatureLayer) return (FeatureLayer) layer;
-        return null;
-    }
-
-    public FeatureTable getFeatureTableById(String id) {
-        Layer layer = layers.get(id);
-        if (layer == null) return null;
-        if (layer instanceof FeatureLayer) return ((FeatureLayer) layer).getFeatureTable();
-        return null;
-    }
-
-    public ServiceFeatureTable getServiceFeatureTableById(String id) {
-        Layer layer = layers.get(id);
-        if (layer == null) return null;
-        if (layer instanceof FeatureLayer)
-            return (ServiceFeatureTable) ((FeatureLayer) layer).getFeatureTable();
-        return null;
-    }
-
     public void addLayerNode(LayerNode node) {
         layerNodes.add(node);
     }
@@ -102,4 +76,17 @@ public class TocContainer extends BaseContainer {
         }
     }
 
+    public List<LayerNode> getLayerNodes() {
+        return layerNodes;
+    }
+
+    public Layer getLayerByUri(String uri) {
+        if (layerNodes == null) return null;
+        Layer layer;
+        for (LayerNode node : layerNodes) {
+            layer = node.filterLayer(uri);
+            if (layer != null) return layer;
+        }
+        return null;
+    }
 }

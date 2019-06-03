@@ -11,6 +11,7 @@ import com.lib.bandaid.arcruntime.core.BaseMapWidget;
 import com.lib.bandaid.system.dialog.ATEDialog;
 import com.titan.gyyzt.R;
 import com.titan.gyyzt.map.ui.aty.MapActivity;
+import com.titan.gyyzt.map.ui.dialog.LocalDialog;
 
 /**
  * Created by zy on 2019/5/24.
@@ -54,7 +55,12 @@ public class FrameMenu extends BaseMapWidget implements View.OnClickListener {
             ((MapActivity) context).toggle();
         }
         if (v.getId() == R.id.tvLoc) {
-            showMsg("定位");
+            LocalDialog.newInstance(new LocalDialog.ICallBack() {
+                @Override
+                public void sure(double dLon, double dLat) {
+                    arcMap.getMapControl().zoomP(dLon, dLat);
+                }
+            }).show(context);
         }
         if (v.getId() == R.id.tvTrail) {
             showMsg("轨迹");

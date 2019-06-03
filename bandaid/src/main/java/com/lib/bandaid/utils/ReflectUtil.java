@@ -367,8 +367,7 @@ public final class ReflectUtil {
             for (int i = 0; i < constructors.length; i++) {
                 constructor = constructors[i];
                 Class[] types = constructor.getParameterTypes();
-                if ((params == null || params.length == 0) &&
-                        (types == null || types.length == 0)) {
+                if ((params == null || params.length == 0) && (types == null || types.length == 0)) {
                     t = (T) clazz.newInstance();
                     break;
                 }

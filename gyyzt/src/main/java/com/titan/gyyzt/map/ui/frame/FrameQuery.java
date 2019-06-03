@@ -1,0 +1,77 @@
+package com.titan.gyyzt.map.ui.frame;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.lib.bandaid.arcruntime.core.BaseMapWidget;
+import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.util.FeatureTaker;
+import com.lib.bandaid.widget.base.EGravity;
+import com.lib.bandaid.widget.layout.RootStatusView;
+import com.titan.gyyzt.R;
+import com.titan.gyyzt.map.apt.SelFeatureApt;
+
+import java.util.List;
+
+/**
+ * Created by zy on 2019/5/29.
+ */
+
+public class FrameQuery extends BaseMapWidget implements View.OnClickListener {
+
+    RootStatusView root;
+    ImageView ivClose;
+    RecyclerView rvFeature;
+    SelFeatureApt selFeatureApt;
+
+    public FrameQuery(Context context) {
+        super(context);
+        w = 0.2f;
+        h = 1;
+        layoutGravity = EGravity.LEFT_CENTER.getValue();
+        setContentView(R.layout.map_ui_frame_query);
+    }
+
+    @Override
+    public void initialize() {
+        ivClose = $(R.id.ivClose);
+        rvFeature = $(R.id.rvFeature);
+        root = (RootStatusView) view;
+    }
+
+    @Override
+    public void registerEvent() {
+        ivClose.setOnClickListener(this);
+    }
+
+    @Override
+    public void initClass() {
+        selFeatureApt = new SelFeatureApt(rvFeature);
+    }
+
+    public void appendFeatures(List<FeatureTaker<LayerNode>> features) {
+        root.showContent();
+        selFeatureApt.appendList(features);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        selFeatureApt.removeAll();
+        root.showLoading();
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.ivClose) {
+            hide();
+        }
+    }
+}

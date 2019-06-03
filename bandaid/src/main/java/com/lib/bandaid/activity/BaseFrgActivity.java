@@ -1,12 +1,11 @@
 package com.lib.bandaid.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -20,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zy on 2018/9/13.
+ * Created by zy on 2019/5/31.
  */
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseFrgActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,4 +156,5 @@ public abstract class BaseActivity extends Activity {
     public <T extends View> T $(int resId) {
         return ViewUtil.findViewById(this, resId);
     }
+
 }

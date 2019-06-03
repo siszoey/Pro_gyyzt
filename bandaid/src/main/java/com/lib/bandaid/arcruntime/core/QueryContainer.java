@@ -6,6 +6,11 @@ import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.ArcGISSublayer;
+import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.lib.bandaid.arcruntime.project.LayerNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,11 +22,11 @@ import java.util.List;
 
 public class QueryContainer extends BaseContainer {
 
-    public void queryFeatures(String uri, QueryParameters params, final ICallBack iCallBack) {
+    public void queryFeatures(final LayerNode node, QueryParameters params, final ICallBack iCallBack) {
         try {
             if (iCallBack != null) iCallBack.ready();
-            FeatureTable featureTable = arcMap.getTocContainer().getFeatureTableById(uri);
-            final ListenableFuture<FeatureQueryResult> future = featureTable.queryFeaturesAsync(params);
+            ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(node.getUri());
+            final ListenableFuture<FeatureQueryResult> future = serviceFeatureTable.queryFeaturesAsync(params, ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
             future.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
@@ -40,16 +45,16 @@ public class QueryContainer extends BaseContainer {
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             if (iCallBack != null) iCallBack.fail(e);
         }
     }
 
-    public void queryRemoteFeatures(String uri, QueryParameters params, final ICallBack iCallBack) {
-        if (iCallBack != null) iCallBack.ready();
+    public void queryFeatures(String uri, QueryParameters params, final ICallBack iCallBack) {
         try {
-            ServiceFeatureTable featureTable = arcMap.getTocContainer().getServiceFeatureTableById(uri);
-            final ListenableFuture<FeatureQueryResult> future = featureTable.queryFeaturesAsync(params, ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
+            if (iCallBack != null) iCallBack.ready();
+            ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(uri);
+            final ListenableFuture<FeatureQueryResult> future = serviceFeatureTable.queryFeaturesAsync(params);
             future.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
@@ -68,7 +73,7 @@ public class QueryContainer extends BaseContainer {
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             if (iCallBack != null) iCallBack.fail(e);
         }
     }

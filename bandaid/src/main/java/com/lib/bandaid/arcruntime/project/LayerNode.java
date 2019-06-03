@@ -21,9 +21,13 @@ public class LayerNode implements Serializable {
 
     private String name;
 
+    private String uri;
+
     private LayerContent layerContent;
 
     private List<LayerNode> nodes;
+
+    private boolean isValid = false;
 
     public Object getId() {
         return id;
@@ -39,6 +43,14 @@ public class LayerNode implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public LayerContent getLayerContent() {
@@ -62,7 +74,29 @@ public class LayerNode implements Serializable {
         this.nodes.add(node);
     }
 
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
     public boolean getVisible() {
+        return layerContent == null ? false : layerContent.isVisible();
+    }
+
+    /**
+     * 判断子图层是否有不可见的
+     *
+     * @return
+     */
+    public boolean hasInVisible() {
+        List<LayerNode> temp = getLeftNode();
+        if (temp == null) return false;
+        for (LayerNode node : temp) {
+           if(!node.getVisible())return true;
+        }
         return layerContent == null ? false : layerContent.isVisible();
     }
 
@@ -70,13 +104,57 @@ public class LayerNode implements Serializable {
         iteration(this, visible);
     }
 
+    public List<LayerNode> getLeftNode() {
+        List<LayerNode> res = new ArrayList<>();
+        if (getLayerContent() != null) {
+            System.out.println(getName());
+            res.add(this);
+        }
+        List<LayerNode> nodes = this.getNodes();
+        if (nodes == null) return res;
+        LayerNode _layerNode;
+        for (int i = 0; i < nodes.size(); i++) {
+            _layerNode = nodes.get(i);
+            getLeftNode(res, _layerNode);
+        }
+        return res;
+    }
+
+    private void getLeftNode(List<LayerNode> in, LayerNode layerNode) {
+        if (layerNode.getLayerContent() != null) {
+            System.out.println(layerNode.getName());
+            in.add(layerNode);
+        }
+        List<LayerNode> nodes = layerNode.getNodes();
+        if (nodes == null) return;
+        LayerNode _layerNode;
+        for (int i = 0; i < nodes.size(); i++) {
+            _layerNode = nodes.get(i);
+            getLeftNode(in, _layerNode);
+        }
+    }
+
+    public Layer filterLayer(String uri) {
+        List<LayerNode> nodes = getLeftNode();
+        LayerNode node;
+        for (int i = 0, len = nodes.size(); i < len; i++) {
+            node = nodes.get(i);
+            if (node.getUri() != null && node.getUri().equals(uri))
+                return (Layer) node.getLayerContent();
+        }
+        return null;
+    }
+
     //----------------------------------------------------------------------------------------------
 
     public static void iteration(LayerNode layerNode, boolean visible) {
         if (layerNode == null) return;
         if (layerNode.getLayerContent() != null) {
-            System.out.println(layerNode.getName());
-            layerNode.getLayerContent().setVisible(visible);
+            try {
+                layerNode.getLayerContent().setVisible(visible);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
         List<LayerNode> nodes = layerNode.getNodes();
         if (nodes == null) return;
@@ -84,27 +162,6 @@ public class LayerNode implements Serializable {
         for (int i = 0; i < nodes.size(); i++) {
             _layerNode = nodes.get(i);
             iteration(_layerNode, visible);
-        }
-    }
-
-
-    public static void iteration(ArcGISMapImageLayer layers) {
-        SublayerList list = layers.getSublayers();
-        ArcGISSublayer gisSublayer;
-        for (int i = 0; i < list.size(); i++) {
-            gisSublayer = list.get(i);
-            System.out.println("---------" + gisSublayer.getName() + "---------");
-            iteration(gisSublayer);
-        }
-    }
-
-
-    public static void iteration(ArcGISSublayer gisSublayer) {
-        ListenableList<ArcGISSublayer> list = gisSublayer.getSublayers();
-        for (int i = 0; i < list.size(); i++) {
-            gisSublayer = list.get(i);
-            System.out.println(gisSublayer.getName());
-            iteration(gisSublayer);
         }
     }
 }

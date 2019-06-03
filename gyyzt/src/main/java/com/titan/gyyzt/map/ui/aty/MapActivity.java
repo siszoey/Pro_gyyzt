@@ -5,10 +5,11 @@ import android.support.annotation.Nullable;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.lib.bandaid.activity.BaseActivity;
+import com.lib.bandaid.activity.BaseFrgActivity;
 import com.lib.bandaid.arcruntime.core.ArcMap;
 import com.lib.bandaid.arcruntime.core.ToolContainer;
-import com.lib.bandaid.arcruntime.tools.ToolSel;
+import com.lib.bandaid.arcruntime.core.WidgetContainer;
+import com.titan.gyyzt.map.ui.tools.ToolSel;
 import com.lib.bandaid.arcruntime.tools.ZoomIn;
 import com.lib.bandaid.arcruntime.tools.ZoomOut;
 import com.lib.bandaid.widget.base.EGravity;
@@ -16,12 +17,13 @@ import com.lib.bandaid.widget.drag.CustomDrawerLayout;
 import com.titan.gyyzt.R;
 import com.titan.gyyzt.map.ui.frame.FrameLayer;
 import com.titan.gyyzt.map.ui.frame.FrameMenu;
+import com.titan.gyyzt.map.ui.frame.FrameQuery;
 
 /**
  * Created by zy on 2019/5/23.
  */
 
-public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
+public class MapActivity extends BaseFrgActivity implements ArcMap.IMapReady {
 
 
     CustomDrawerLayout drawerLayout;
@@ -36,9 +38,9 @@ public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ToolContainer.registerTool("辅助", EGravity.LEFT_BOTTOM, ZoomIn.class, ZoomOut.class);
-        ToolContainer.registerTool("通用", EGravity.RIGHT_BOTTOM, ToolSel.class);
-
+        ToolContainer.registerTool("辅助", EGravity.RIGHT_BOTTOM, ZoomIn.class, ZoomOut.class);
+        ToolContainer.registerTool("通用", EGravity.RIGHT_CENTER, ToolSel.class);
+        WidgetContainer.registerWidget(FrameQuery.class);
 
         setContentView(R.layout.map_ui_aty_map);
     }
@@ -58,6 +60,7 @@ public class MapActivity extends BaseActivity implements ArcMap.IMapReady {
         frameLayer.create(arcMap);
         menuLeft.addView(frameMenu.getView());
         menuRight.addView(frameLayer.getView());
+
     }
 
     @Override

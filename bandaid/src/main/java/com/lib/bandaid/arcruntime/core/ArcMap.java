@@ -40,6 +40,7 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
     private List<String> baseMapUrls = new ArrayList<>();
     private List<String> featureUrls = new ArrayList<>();
     private List<String> mapServerUrls = new ArrayList<>();
+    private List<String> mapServerDesc = new ArrayList<>();
 
     private TocContainer tocContainer = new TocContainer();
     private QueryContainer queryContainer = new QueryContainer();
@@ -113,6 +114,10 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
             if (mapServerUrls == null) return;
             for (int i = 0; i < mapServerUrls.size(); i++) {
                 ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(mapServerUrls.get(i));
+                mapImageLayer.setDescription(mapServerUrls.get(i));
+                if (mapServerDesc != null && mapServerDesc.size() == mapServerUrls.size()) {
+                    mapImageLayer.setName(mapServerDesc.get(i));
+                }
                 mapView.getMap().getOperationalLayers().add(mapImageLayer);
             }
         }
@@ -234,6 +239,14 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
         if (urls == null) return this;
         for (int i = 0; i < urls.length; i++) {
             mapServerUrls.add(urls[i]);
+        }
+        return this;
+    }
+
+    public ArcMap setMapServerDesc(String... name) {
+        if (name == null) return this;
+        for (int i = 0; i < name.length; i++) {
+            mapServerDesc.add(name[i]);
         }
         return this;
     }

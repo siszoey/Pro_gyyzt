@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,14 +16,20 @@ import com.lib.bandaid.utils.MeasureScreen;
 import com.lib.bandaid.widget.snackbar.Snackbar;
 import com.lib.bandaid.widget.snackbar.SnackbarManager;
 
+import java.util.zip.Inflater;
+
 
 /**
  * Created by zy on 2018/7/31.
  */
 
 public abstract class BaseWidget implements IWidget, IOnActivityResult {
-
-    protected ViewGroup.LayoutParams layoutParams;
+    /**
+     *
+     */
+    protected int layoutGravity = 5;
+    protected float w = 1f;
+    protected float h = 1f;
     /**
      * 屏幕尺寸
      */
@@ -43,10 +50,6 @@ public abstract class BaseWidget implements IWidget, IOnActivityResult {
      *
      */
     protected Activity activity;
-    /**
-     *
-     */
-    protected int layoutGravity = 5;
 
 
     public BaseWidget(Context context) {
@@ -72,6 +75,13 @@ public abstract class BaseWidget implements IWidget, IOnActivityResult {
 
     protected void setContentView(int layoutId) {
         view = View.inflate(context, layoutId, null);
+        {
+            if (view != null && layoutGravity != -1) {
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams((int) (MeasureScreen.getScreenWidth(context) * w), (int) (MeasureScreen.getScreenHeight(context) * h));
+                view.setLayoutParams(params);
+            }
+        }
+
         initialize();
         afterInitialize();
         registerEvent();
@@ -236,10 +246,5 @@ public abstract class BaseWidget implements IWidget, IOnActivityResult {
                         //.color(Color.argb(150, 255, 128, 0))
                         .textColor(Color.WHITE)
         );
-    }
-
-
-    public ViewGroup.LayoutParams getLayoutParams() {
-        return layoutParams;
     }
 }

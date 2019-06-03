@@ -22,6 +22,38 @@ public final class NodeIteration {
             treeNode.setValue(layerNode);
             treeNode.setExpanded(false);
             treeNode.setItemClickEnable(true);
+            treeNode.setSelected(!layerNode.hasInVisible());
+        }
+        List<LayerNode> list = layerNode.getNodes();
+        if (list == null) return treeNode;
+
+        LayerNode _layerNode;
+        TreeNode _treeNode;
+        for (int i = 0; i < list.size(); i++) {
+            _layerNode = list.get(i);
+            System.out.println("---------" + _layerNode.getName() + "---------");
+
+            _treeNode = new TreeNode(_layerNode);
+            _treeNode.setLabel(_layerNode.getName());
+            _treeNode.setExpanded(false);
+            _treeNode.setItemClickEnable(true);
+            _treeNode.setLevel(treeNode.getLevel() + 1);
+            _treeNode.setSelected(_layerNode.getVisible());
+            treeNode.addChild(_treeNode);
+
+            _iteration(_layerNode, _treeNode);
+        }
+        return treeNode;
+    }
+
+
+    private static TreeNode _iteration(LayerNode layerNode, TreeNode treeNode) {
+        if (layerNode == null || treeNode == null) return treeNode;
+        {
+            treeNode.setLabel(layerNode.getName());
+            treeNode.setValue(layerNode);
+            treeNode.setExpanded(false);
+            treeNode.setItemClickEnable(true);
             treeNode.setSelected(layerNode.getVisible());
         }
         List<LayerNode> list = layerNode.getNodes();
@@ -41,63 +73,9 @@ public final class NodeIteration {
             _treeNode.setSelected(_layerNode.getVisible());
             treeNode.addChild(_treeNode);
 
-            iteration(_layerNode, _treeNode);
+            _iteration(_layerNode, _treeNode);
         }
-
         return treeNode;
     }
 
-    public static TreeNode iterationV0(LayerNode layerNode, TreeNode treeNode) {
-        if (layerNode == null || treeNode == null) return treeNode;
-        treeNode.setLabel(treeNode.getLabel());
-        List<LayerNode> list = layerNode.getNodes();
-        if (list == null) return treeNode;
-
-        LayerNode _layerNode;
-        TreeNode _treeNode;
-        for (int i = 0; i < list.size(); i++) {
-            _layerNode = list.get(i);
-            System.out.println("---------" + _layerNode.getName() + "---------");
-
-            _treeNode = new TreeNode(_layerNode);
-            _treeNode.setLabel(_layerNode.getName());
-            _treeNode.setExpanded(true);
-            _treeNode.setItemClickEnable(true);
-            _treeNode.setLevel(treeNode.getLevel() + 1);
-            _treeNode.setSelected(_layerNode.getVisible());
-            _treeNode.setExpanded(true);
-            treeNode.addChild(_treeNode);
-            iterationV0(_layerNode, _treeNode);
-        }
-
-        return treeNode;
-    }
-
-
-
-    public static TreeNode iterationV1(LayerNode layerNode, TreeNode treeNode) {
-        if (layerNode == null || treeNode == null) return treeNode;
-        treeNode.setLabel(layerNode.getName());
-        List<LayerNode> list = layerNode.getNodes();
-        if (list == null) return treeNode;
-
-        LayerNode _layerNode;
-        TreeNode _treeNode;
-        for (int i = 0; i < list.size(); i++) {
-            _layerNode = list.get(i);
-            System.out.println("---------" + _layerNode.getName() + "---------");
-
-            _treeNode = new TreeNode(_layerNode);
-            _treeNode.setLabel(_layerNode.getName());
-            _treeNode.setExpanded(false);
-            _treeNode.setItemClickEnable(true);
-            _treeNode.setLevel(treeNode.getLevel() + 1);
-            _treeNode.setSelected(_layerNode.getVisible());
-            treeNode.addChild(_treeNode);
-
-            iterationV1(_layerNode, _treeNode);
-        }
-
-        return treeNode;
-    }
 }

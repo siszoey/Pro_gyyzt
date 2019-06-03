@@ -63,9 +63,9 @@ public final class FeatureUtil {
         return featureTakers;
     }
 
-    public static List<FeatureTaker> convertFeatureTaker(List<Feature> features) {
+    public static<T> List<FeatureTaker<T>> convertFeatureTaker(List<Feature> features) {
         if (features == null) return null;
-        List<FeatureTaker> featureTakers = new ArrayList<>();
+        List<FeatureTaker<T>> featureTakers = new ArrayList<>();
         FeatureTaker taker;
         for (Feature feature : features) {
             taker = FeatureTaker.create(feature, null);

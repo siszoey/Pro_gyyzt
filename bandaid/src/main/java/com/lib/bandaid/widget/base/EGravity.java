@@ -1,5 +1,8 @@
 package com.lib.bandaid.widget.base;
 
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
 /**
  * Created by zy on 2018/12/10.
  */
@@ -73,37 +76,37 @@ public enum EGravity {
     }
 
 
-    /*public static ViewGroup.LayoutParams initMapWidgetParam(int gravity, DragLayoutV2.LayoutParams params) {
+    public static ViewGroup.LayoutParams initMapWidgetParam(int gravity, RelativeLayout.LayoutParams params) {
         EGravity widgetGravity = EGravity.getEnumByValue(gravity);
         if (params == null) return null;
         if (widgetGravity == EGravity.TOP || widgetGravity == EGravity.LEFT_TOP) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_TOP);
-            params.addRule(DragLayoutV2.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         } else if (widgetGravity == EGravity.BOTTOM || widgetGravity == EGravity.LEFT_BOTTOM) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_LEFT);
-            params.addRule(DragLayoutV2.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         } else if (widgetGravity == EGravity.RIGHT_TOP || widgetGravity == EGravity.RIGHT) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_RIGHT);
-            params.addRule(DragLayoutV2.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         } else if (widgetGravity == EGravity.RIGHT_BOTTOM) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_RIGHT);
-            params.addRule(DragLayoutV2.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         } else if (widgetGravity == EGravity.CENTER) {
-            params.addRule(DragLayoutV2.CENTER_HORIZONTAL);
-            params.addRule(DragLayoutV2.CENTER_VERTICAL);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
         } else if (widgetGravity == EGravity.LEFT_CENTER) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_LEFT);
-            params.addRule(DragLayoutV2.CENTER_VERTICAL);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
         } else if (widgetGravity == EGravity.TOP_CENTER) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_TOP);
-            params.addRule(DragLayoutV2.CENTER_HORIZONTAL);
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         } else if (widgetGravity == EGravity.BOTTOM_CENTER) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_BOTTOM);
-            params.addRule(DragLayoutV2.CENTER_HORIZONTAL);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         } else if (widgetGravity == EGravity.RIGHT_CENTER) {
-            params.addRule(DragLayoutV2.ALIGN_PARENT_RIGHT);
-            params.addRule(DragLayoutV2.CENTER_VERTICAL);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
         }
         return params;
-    }*/
+    }
 }

@@ -1,6 +1,9 @@
 package com.titan.gyyzt.map.ui.frame;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 import com.lib.bandaid.arcruntime.core.ArcMap;
@@ -28,6 +31,7 @@ public class FrameLayer extends BaseMapWidget implements ITreeViewNodeListening,
 
     public FrameLayer(Context context) {
         super(context);
+        layoutGravity = -1;
         setContentView(R.layout.map_ui_frame_layer);
     }
 
@@ -52,14 +56,15 @@ public class FrameLayer extends BaseMapWidget implements ITreeViewNodeListening,
         loadMap();
     }
 
+
     void loadMap() {
         arcMap.setBaseMapUrl(Config.APP_ARC_MAP_BASE);
         arcMap.setMapServerUrl(Config.APP_ARC_MAP_SERVICE, Config.APP_ARC_MAP_SERVICE_2015_SS);
+        arcMap.setMapServerDesc("图层1", "图层2");
         arcMap.getTocContainer().addILayerLoaded(this);
         arcMap.mapLoad(new ArcMap.IMapReady() {
             @Override
             public void onMapReady() {
-                System.out.println(1122);
             }
         });
     }
