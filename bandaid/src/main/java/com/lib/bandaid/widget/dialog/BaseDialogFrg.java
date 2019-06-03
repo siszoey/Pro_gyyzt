@@ -71,7 +71,7 @@ public abstract class BaseDialogFrg extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layout = inflater.inflate(R.layout.widget_base_dialog_fragment, null);
-        _contentView = inflater.inflate(layoutId, null);
+        if (_contentView == null) _contentView = inflater.inflate(layoutId, null);
         init();
         initialize();
         registerEvent();
@@ -121,6 +121,10 @@ public abstract class BaseDialogFrg extends DialogFragment {
 
     public void setContentView(@LayoutRes int id) {
         this.layoutId = id;
+    }
+
+    public void setContentView(View view) {
+        this._contentView = view;
     }
 
     public <T extends View> T $(int resId) {

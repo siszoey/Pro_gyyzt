@@ -1,30 +1,17 @@
 package com.titan.gyyzt.map.ui.tools;
 
-import android.support.annotation.NonNull;
 import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.QueryParameters;
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
-import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
-import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.layers.Layer;
-import com.esri.arcgisruntime.layers.LayerContent;
-import com.esri.arcgisruntime.layers.RasterLayer;
-import com.esri.arcgisruntime.mapping.view.Callout;
-import com.lib.bandaid.R;
 import com.lib.bandaid.arcruntime.core.QueryContainer;
 import com.lib.bandaid.arcruntime.project.LayerNode;
 import com.lib.bandaid.arcruntime.tools.core.BaseTool;
 import com.lib.bandaid.arcruntime.util.FeatureTaker;
 import com.lib.bandaid.arcruntime.util.FeatureUtil;
+import com.titan.gyyzt.R;
 import com.titan.gyyzt.map.ui.frame.FrameQuery;
 
 import java.util.List;
@@ -38,8 +25,8 @@ public class ToolSel extends BaseTool {
     public ToolSel() {
         id = getClass().getSimpleName();
         name = "选择";
-        resId = R.mipmap.tool_map_zoom_in_normal;
-        checkedResId = R.mipmap.tool_map_zoom_in_pressed;
+        resId = R.mipmap.tool_map_identify_nomal;
+        checkedResId = R.mipmap.tool_map_identify_pressed;
     }
 
     @Override

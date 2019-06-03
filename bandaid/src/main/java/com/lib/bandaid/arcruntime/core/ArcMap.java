@@ -112,8 +112,9 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
 
         {
             if (mapServerUrls == null) return;
+            ArcGISMapImageLayer mapImageLayer;
             for (int i = 0; i < mapServerUrls.size(); i++) {
-                ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(mapServerUrls.get(i));
+                mapImageLayer = new ArcGISMapImageLayer(mapServerUrls.get(i));
                 mapImageLayer.setDescription(mapServerUrls.get(i));
                 if (mapServerDesc != null && mapServerDesc.size() == mapServerUrls.size()) {
                     mapImageLayer.setName(mapServerDesc.get(i));

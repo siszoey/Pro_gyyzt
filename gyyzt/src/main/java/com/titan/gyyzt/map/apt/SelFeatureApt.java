@@ -2,6 +2,7 @@ package com.titan.gyyzt.map.apt;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -27,13 +28,14 @@ public class SelFeatureApt extends BaseRecycleAdapter<FeatureTaker<LayerNode>, B
         return new Holder(parent, R.layout.map_apt_sel_feature);
     }
 
-    class Holder extends BaseViewHolder<FeatureTaker<LayerNode>> {
+    class Holder extends BaseViewHolder<FeatureTaker<LayerNode>> implements View.OnClickListener {
 
         TextView tvName;
 
         public Holder(ViewGroup parent, int resId) {
             super(parent, resId);
             tvName = getView(R.id.tvName);
+            tvName.setOnClickListener(this);
         }
 
         @Override
@@ -43,6 +45,11 @@ public class SelFeatureApt extends BaseRecycleAdapter<FeatureTaker<LayerNode>, B
                 Feature feature = data.getFeature();
                 tvName.setText(node.getName() + "_" + feature.getAttributes().get("OBJECTID").toString());
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (iViewClickListener != null) iViewClickListener.onClick(v, data, position);
         }
     }
 }
