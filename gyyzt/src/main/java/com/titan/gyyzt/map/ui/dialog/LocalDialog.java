@@ -22,7 +22,7 @@ public class LocalDialog extends BaseDialogFrg implements View.OnClickListener {
     public static LocalDialog newInstance(ICallBack iCallBack) {
         LocalDialog fragment = new LocalDialog();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("data", iCallBack); 
+        bundle.putSerializable("data", iCallBack);
         fragment.setArguments(bundle);
         return fragment;
     }
