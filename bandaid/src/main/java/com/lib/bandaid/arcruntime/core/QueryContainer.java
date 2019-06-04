@@ -3,14 +3,10 @@ package com.lib.bandaid.arcruntime.core;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
-import com.esri.arcgisruntime.data.FeatureTable;
+import com.esri.arcgisruntime.data.Field;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.Geometry;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
-import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;

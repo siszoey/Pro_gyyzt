@@ -1,10 +1,6 @@
 package com.titan.gyyzt.map.utils;
 
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
-import com.esri.arcgisruntime.layers.SublayerList;
-import com.esri.arcgisruntime.util.ListenableList;
-import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.widget.treeview.bean.TreeNode;
 
 import java.util.List;

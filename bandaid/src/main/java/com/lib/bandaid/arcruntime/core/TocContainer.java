@@ -1,13 +1,9 @@
 package com.lib.bandaid.arcruntime.core;
 
-import com.esri.arcgisruntime.data.FeatureTable;
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.lib.bandaid.arcruntime.project.LayerNode;
-import com.lib.bandaid.arcruntime.project.Parser;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.project.Parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

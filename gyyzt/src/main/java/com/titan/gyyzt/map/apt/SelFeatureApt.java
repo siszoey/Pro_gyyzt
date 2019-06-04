@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.esri.arcgisruntime.data.Feature;
-import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.arcruntime.util.FeatureTaker;
 import com.titan.gyyzt.R;
 import com.titan.gyyzt.comment.adapter.recycle.BaseRecycleAdapter;

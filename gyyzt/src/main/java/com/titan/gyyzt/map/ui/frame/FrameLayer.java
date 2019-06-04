@@ -1,15 +1,12 @@
 package com.titan.gyyzt.map.ui.frame;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 import com.lib.bandaid.arcruntime.core.ArcMap;
 import com.lib.bandaid.arcruntime.core.BaseMapWidget;
 import com.lib.bandaid.arcruntime.core.TocContainer;
-import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.widget.treeview.action.TreeView;
 import com.lib.bandaid.widget.treeview.adapter.i.ITreeViewNodeListening;
 import com.lib.bandaid.widget.treeview.bean.TreeNode;

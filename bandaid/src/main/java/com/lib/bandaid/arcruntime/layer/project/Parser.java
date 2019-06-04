@@ -1,4 +1,4 @@
-package com.lib.bandaid.arcruntime.project;
+package com.lib.bandaid.arcruntime.layer.project;
 
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;

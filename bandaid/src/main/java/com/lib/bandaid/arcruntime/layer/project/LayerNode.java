@@ -1,11 +1,11 @@
-package com.lib.bandaid.arcruntime.project;
+package com.lib.bandaid.arcruntime.layer.project;
 
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.LayerContent;
-import com.esri.arcgisruntime.layers.SublayerList;
-import com.esri.arcgisruntime.util.ListenableList;
+import com.lib.bandaid.arcruntime.layer.info.LayerInfo;
+import com.lib.bandaid.thread.rx.RxSimpleUtil;
+import com.lib.bandaid.utils.HttpSimpleUtil;
+import com.lib.bandaid.utils.MapUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +28,8 @@ public class LayerNode implements Serializable {
     private List<LayerNode> nodes;
 
     private boolean isValid = false;
+
+    private LayerInfo info;
 
     public Object getId() {
         return id;
@@ -80,10 +82,27 @@ public class LayerNode implements Serializable {
 
     public void setValid(boolean valid) {
         isValid = valid;
+        if (valid) {
+            RxSimpleUtil.simple(new RxSimpleUtil.ISimpleBack<String>() {
+                @Override
+                public String run() {
+                    return HttpSimpleUtil._get(uri + "?f=pjson");
+                }
+
+                @Override
+                public void success(String s) {
+                    info = MapUtil.string2Entity(s, LayerInfo.class);
+                }
+            });
+        }
     }
 
     public boolean getVisible() {
         return layerContent == null ? false : layerContent.isVisible();
+    }
+
+    public LayerInfo getInfo() {
+        return info;
     }
 
     /**
@@ -95,7 +114,7 @@ public class LayerNode implements Serializable {
         List<LayerNode> temp = getLeftNode();
         if (temp == null) return false;
         for (LayerNode node : temp) {
-           if(!node.getVisible())return true;
+            if (!node.getVisible()) return true;
         }
         return layerContent == null ? false : layerContent.isVisible();
     }

@@ -6,10 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.lib.bandaid.arcruntime.core.BaseMapWidget;
-import com.lib.bandaid.arcruntime.project.LayerNode;
+import com.lib.bandaid.arcruntime.layer.info.Field;
+import com.lib.bandaid.arcruntime.layer.info.LayerInfo;
+import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.arcruntime.util.FeatureTaker;
 import com.lib.bandaid.widget.base.EGravity;
-import com.lib.bandaid.widget.layout.EntityLayoutView;
 import com.lib.bandaid.widget.layout.RootStatusView;
 import com.titan.gyyzt.R;
 import com.titan.gyyzt.comment.adapter.recycle.BaseRecycleAdapter;
@@ -17,7 +18,6 @@ import com.titan.gyyzt.map.apt.SelFeatureApt;
 import com.titan.gyyzt.map.ui.dialog.PropertyDialog;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zy on 2019/5/29.
@@ -82,6 +82,8 @@ public class FrameQuery extends BaseMapWidget implements View.OnClickListener, B
 
     @Override
     public void onClick(View view, FeatureTaker<LayerNode> data, int position) {
-        PropertyDialog.newInstance(data.getData().getName(), data.getFeature().getAttributes()).show(context);
+        LayerNode node = data.getData();
+        LayerInfo info = node.getInfo();
+        PropertyDialog.newInstance(data.getData().getName(), info, data.getFeature().getAttributes()).show(context);
     }
 }
