@@ -44,7 +44,6 @@ public class SketchContainer extends BaseContainer {
             sketchStyle.setLineSymbol(lineSymbol);
             sketchStyle.setFillSymbol(fillSymbol);
             sketchEditor.setSketchStyle(sketchStyle);
-            //sketchEditor.addGeometryChangedListener(new GeometryChangedListener(mapView, callBack));
             mapView.setSketchEditor(sketchEditor);
         }
     }

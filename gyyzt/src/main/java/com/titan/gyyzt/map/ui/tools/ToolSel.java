@@ -7,7 +7,6 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.lib.bandaid.arcruntime.core.QueryContainer;
-import com.lib.bandaid.arcruntime.layer.info.LayerInfo;
 import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.arcruntime.tools.core.BaseTool;
 import com.lib.bandaid.arcruntime.util.FeatureTaker;

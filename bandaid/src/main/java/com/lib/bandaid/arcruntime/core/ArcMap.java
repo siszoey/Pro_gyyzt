@@ -1,18 +1,15 @@
 package com.lib.bandaid.arcruntime.core;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
@@ -46,7 +43,11 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
     private QueryContainer queryContainer = new QueryContainer();
     private MapControl mapControl = new MapControl();
     private WidgetContainer widgetContainer = new WidgetContainer();
+
+    private SketchTool sketchTool = new SketchTool();
     private SketchContainer sketchContainer = new SketchContainer();
+
+
     private GraphicContainer graphicContainer = new GraphicContainer();
     private ToolContainer toolContainer = new ToolContainer();
 
@@ -150,6 +151,7 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
         queryContainer.create(arcMap);
         mapControl.create(arcMap);
         widgetContainer.create(arcMap);
+        sketchTool.create(arcMap);
         sketchContainer.create(arcMap);
         graphicContainer.create(arcMap);
         toolContainer.create(arcMap);
@@ -161,6 +163,7 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
         queryContainer.ready(layers);
         mapControl.ready(layers);
         widgetContainer.ready(layers);
+        sketchTool.ready(layers);
         sketchContainer.ready(layers);
         graphicContainer.ready(layers);
         toolContainer.ready(layers);
@@ -172,6 +175,7 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
         queryContainer.destroy();
         mapControl.destroy();
         widgetContainer.destroy();
+        sketchTool.destroy();
         sketchContainer.destroy();
         graphicContainer.destroy();
         toolContainer.destroy();
@@ -214,6 +218,10 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
 
     public SketchContainer getSketchContainer() {
         return sketchContainer;
+    }
+
+    public SketchTool getSketchTool() {
+        return sketchTool;
     }
 
     public ToolContainer getToolContainer() {
