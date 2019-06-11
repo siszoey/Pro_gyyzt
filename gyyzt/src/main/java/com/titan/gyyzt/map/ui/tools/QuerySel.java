@@ -48,16 +48,6 @@ public class QuerySel extends BaseTool {
             public void callback(Object o) {
                 arcMap.getSketchTool().setCallBack(new ValueCallback() {
                     @Override
-                    public void onSuccess(Object t) {
-                        System.out.println(t);
-                    }
-
-                    @Override
-                    public void onFail(String value) {
-
-                    }
-
-                    @Override
                     public void onGeometry(Geometry geometry) {
                         System.out.println(geometry);
                     }
