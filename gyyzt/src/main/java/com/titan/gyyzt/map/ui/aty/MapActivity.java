@@ -9,6 +9,7 @@ import com.lib.bandaid.activity.BaseFrgActivity;
 import com.lib.bandaid.arcruntime.core.ArcMap;
 import com.lib.bandaid.arcruntime.core.ToolContainer;
 import com.lib.bandaid.arcruntime.core.WidgetContainer;
+import com.titan.gyyzt.map.ui.tools.QuerySel;
 import com.titan.gyyzt.map.ui.tools.ToolSel;
 import com.lib.bandaid.arcruntime.tools.ZoomIn;
 import com.lib.bandaid.arcruntime.tools.ZoomOut;
@@ -39,7 +40,7 @@ public class MapActivity extends BaseFrgActivity implements ArcMap.IMapReady {
         super.onCreate(savedInstanceState);
 
         ToolContainer.registerTool("辅助", EGravity.RIGHT_BOTTOM, ZoomIn.class, ZoomOut.class);
-        ToolContainer.registerTool("通用", EGravity.RIGHT_CENTER, ToolSel.class);
+        ToolContainer.registerTool("通用", EGravity.RIGHT_CENTER, ToolSel.class, QuerySel.class);
         WidgetContainer.registerWidget(FrameQuery.class);
 
         setContentView(R.layout.map_ui_aty_map);

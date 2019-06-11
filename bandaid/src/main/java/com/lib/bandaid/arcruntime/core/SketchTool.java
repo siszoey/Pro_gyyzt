@@ -48,8 +48,6 @@ public class SketchTool extends BaseContainer {
 
     private static String TAG = "DrawTool";
 
-    private ArcMap arcMap;
-    private MapView mapView;
     private GraphicsOverlay mGraphicsLayerEditing;//绘制要素图层
     private GraphicsOverlay tempLayer;//零时图层，用于存储要素各个节点信息
     private int drawType;//当前要素绘制类型
@@ -82,10 +80,6 @@ public class SketchTool extends BaseContainer {
     @Override
     public void create(ArcMap arcMap) {
         super.create(arcMap);
-        this.mGraphicsLayerEditing = new GraphicsOverlay();
-        this.mapView.getGraphicsOverlays().add(this.mGraphicsLayerEditing);
-        this.tempLayer = new GraphicsOverlay();
-        this.mapView.getGraphicsOverlays().add(this.tempLayer);
         this.drawListener = new DrawTouchListener();
         this.sketchEditor = mapView.getSketchEditor();
     }
@@ -93,7 +87,12 @@ public class SketchTool extends BaseContainer {
     @Override
     public void ready(List<Layer> layers) {
         super.ready(layers);
-        defaultSpatial = mapView.getSpatialReference();
+        this.defaultSpatial = mapView.getSpatialReference();
+
+        this.mGraphicsLayerEditing = new GraphicsOverlay();
+        this.mapView.getGraphicsOverlays().add(this.mGraphicsLayerEditing);
+        this.tempLayer = new GraphicsOverlay();
+        this.mapView.getGraphicsOverlays().add(this.tempLayer);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -120,6 +119,7 @@ public class SketchTool extends BaseContainer {
             sketchEditor.setSketchStyle(sketchStyle);
 
             sketchEditor.addGeometryChangedListener(new GeometryChangedListener(mapView, callBack));
+
             mapView.setSketchEditor(sketchEditor);
         }
         switch (this.drawType) {
@@ -128,14 +128,6 @@ public class SketchTool extends BaseContainer {
                 break;
             case DrawType.POLYGON:
                 sketchEditor.start(SketchCreationMode.POLYGON);
-                break;
-            case DrawType.ENVELOPE:
-                envelopeBuilder = new EnvelopeBuilder(this.defaultSpatial);
-                drawGraphic = new Graphic();
-                drawGraphic.setGeometry(envelopeBuilder.toGeometry());
-                drawGraphic.setSymbol(DrawSymbol.mFillSymbol);
-                mGraphicsLayerEditing.getGraphics().add(drawGraphic);
-                drawGraphic.getGraphicsOverlay().setOpacity(0.7f);
                 break;
             case DrawType.FREEHAND_POLYGON:
                 sketchEditor.start(SketchCreationMode.FREEHAND_POLYGON);
@@ -149,6 +141,14 @@ public class SketchTool extends BaseContainer {
             case DrawType.CIRCLE:
                 pointCollection = new PointCollection(mapView.getSpatialReference());
                 break;
+            case DrawType.ENVELOPE:
+                envelopeBuilder = new EnvelopeBuilder(this.defaultSpatial);
+                drawGraphic = new Graphic();
+                drawGraphic.setGeometry(envelopeBuilder.toGeometry());
+                drawGraphic.setSymbol(DrawSymbol.mFillSymbol);
+                mGraphicsLayerEditing.getGraphics().add(drawGraphic);
+                drawGraphic.getGraphicsOverlay().setOpacity(0.7f);
+                break;
         }
 
         isCompleteDraw = false;//开始绘制
@@ -156,7 +156,6 @@ public class SketchTool extends BaseContainer {
 
     @SuppressLint("ClickableViewAccessibility")
     public void deactivate() {
-        //this.mapView.setOnTouchListener(defaultListener);
         //取消事件
         arcMap.setEvent(null);
         this.active = false;
@@ -331,22 +330,15 @@ public class SketchTool extends BaseContainer {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
             Point point = toMapPoint(event);
-            if (active && drawType == DrawType.ENVELOPE && event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (active && (drawType == DrawType.ENVELOPE || drawType == DrawType.CIRCLE) && event.getAction() == MotionEvent.ACTION_DOWN) {
                 switch (drawType) {
                     case DrawType.ENVELOPE:
                         startPoint = point;
                         envelopeBuilder.setXY(point.getX(), point.getY(), point.getX(), point.getY());
                         break;
                     case DrawType.CIRCLE:
-                        pointCollection.add(point);
-                        double radius = 0;
-                        if (pointCollection.size() == 2) {
-                            double x = (pointCollection.get(1).getX() - pointCollection.get(0).getX());
-                            double y = (pointCollection.get(1).getY() - pointCollection.get(0).getY());
-                            radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-                        }
-
-                        getCircle(pointCollection.get(0), radius);
+                        startPoint = point;
+                        break;
                 }
             }
             return super.onTouch(view, event);
@@ -360,7 +352,7 @@ public class SketchTool extends BaseContainer {
         @Override
         public boolean onUp(MotionEvent e) {
             if (drawGraphic != null) {
-                callBack.onGeometry(drawGraphic.getGeometry());
+                if (callBack != null) callBack.onGeometry(drawGraphic.getGeometry());
             }
             return true;
         }
@@ -373,7 +365,7 @@ public class SketchTool extends BaseContainer {
         @Override
         public boolean onScroll(MotionEvent from, MotionEvent to, float velocityX, float velocityY) {
             Point point = toMapPoint(to);
-            if (active && drawType == DrawType.ENVELOPE) {
+            if (active && (drawType == DrawType.ENVELOPE || drawType == DrawType.CIRCLE)) {
                 switch (drawType) {
                     case DrawType.ENVELOPE:
                         envelopeBuilder.setXMin(startPoint.getX() > point.getX() ? point
@@ -389,7 +381,16 @@ public class SketchTool extends BaseContainer {
                         if (flag) {
                             drawGraphic.setGeometry(envelopeBuilder.toGeometry());
                         }
+                        break;
 
+                    case DrawType.CIRCLE:
+                        pointCollection.add(point);
+                        if (pointCollection.size() > 1) {
+                            double x = (point.getX() - startPoint.getX());
+                            double y = (point.getY() - startPoint.getY());
+                            double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                            getCircle(startPoint, radius);
+                        }
                         break;
                 }
                 return true;
@@ -548,11 +549,10 @@ public class SketchTool extends BaseContainer {
         Graphic pointGraphic = new Graphic(point, simpleMarkerSymbol);
         mGraphicsLayerEditing.getGraphics().add(pointGraphic);
 
-        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.parseColor("#FC8145"), 3.0f);
-        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.parseColor("#33e97676"), lineSymbol);
-
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.parseColor("#FC8145"), 2.0f);
+        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.TRANSPARENT, lineSymbol);
+        mGraphicsLayerEditing.getGraphics().clear();
         Graphic graphic = new Graphic(polygon, simpleFillSymbol);
-
         mGraphicsLayerEditing.getGraphics().add(graphic);
     }
 
@@ -584,7 +584,7 @@ public class SketchTool extends BaseContainer {
         this.callBack = callBack;
     }
 
-    private Vector<DrawEventListener> repository = new Vector<DrawEventListener>();
+    private Vector<DrawEventListener> repository = new Vector<>();
 
     // 添加监听
     public void addEventListener(DrawEventListener listener) {
