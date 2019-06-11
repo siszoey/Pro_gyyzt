@@ -15,7 +15,7 @@ public class SketchDrawTouchEvent extends DefaultMapViewOnTouchListener {
     private ValueCallback callBack;
 
 
-    public SketchDrawTouchEvent(MapView mapView,View.OnTouchListener lo, ValueCallback callBack) {
+    public SketchDrawTouchEvent(MapView mapView, View.OnTouchListener lo, ValueCallback callBack) {
         super(mapView.getContext(), mapView);
         this.callBack = callBack;
         _listener = lo;
@@ -27,9 +27,9 @@ public class SketchDrawTouchEvent extends DefaultMapViewOnTouchListener {
         //这里实现监听选择性调用
         if (e.getAction() == MotionEvent.ACTION_UP) {
             boolean flag = mMapView.getSketchEditor().isSketchValid();
-            if(flag){
+            if (flag) {
                 Geometry geometry = mMapView.getSketchEditor().getGeometry();
-                callBack.onGeometry(geometry);
+                if (callBack != null) callBack.onGeometry(geometry);
             }
         }
 

@@ -16,7 +16,7 @@ public class GeometryChangedListener implements SketchGeometryChangedListener {
     private MapView mapView;
     private ValueCallback callBack;
 
-    public GeometryChangedListener(MapView mapView, ValueCallback callBack){
+    public GeometryChangedListener(MapView mapView, ValueCallback callBack) {
         this.mapView = mapView;
         this.callBack = callBack;
     }
@@ -26,12 +26,12 @@ public class GeometryChangedListener implements SketchGeometryChangedListener {
         boolean b = event.getSource().isSketchValid();
         Geometry geometry = event.getGeometry();
         boolean flag = false;
-        if(geometry != null){
+        if (geometry != null) {
             flag = (geometry.getGeometryType() == GeometryType.POINT);
         }
-        if(b && flag){
+        if (b && flag) {
             callBack.onGeometry(geometry);
-        }else{
+        } else {
             setListener();
         }
 
@@ -39,15 +39,15 @@ public class GeometryChangedListener implements SketchGeometryChangedListener {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setListener(){
+    private void setListener() {
         View.OnTouchListener touch = mapView.getOnTouchListener();
-        if (touch instanceof SketchDrawTouchEvent){
+        if (touch instanceof SketchDrawTouchEvent) {
             return;
         }
 
         //添加地图的Touch监听
         DefaultMapViewOnTouchListener lo = (DefaultMapViewOnTouchListener) mapView.getOnTouchListener();
-        SketchDrawTouchEvent sketchDrawTouchEvent = new SketchDrawTouchEvent(mapView, lo,callBack);
+        SketchDrawTouchEvent sketchDrawTouchEvent = new SketchDrawTouchEvent(mapView, lo, callBack);
         mapView.setOnTouchListener(sketchDrawTouchEvent);
     }
 }
