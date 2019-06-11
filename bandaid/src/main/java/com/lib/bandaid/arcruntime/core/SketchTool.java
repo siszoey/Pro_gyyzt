@@ -1,12 +1,9 @@
 package com.lib.bandaid.arcruntime.core;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.EnvelopeBuilder;
 import com.esri.arcgisruntime.geometry.Point;
@@ -14,7 +11,6 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.Layer;
-import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -24,18 +20,15 @@ import com.esri.arcgisruntime.mapping.view.SketchStyle;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-import com.lib.bandaid.arcruntime.core.ArcMap;
 import com.lib.bandaid.arcruntime.core.draw.DrawEvent;
 import com.lib.bandaid.arcruntime.core.draw.DrawEventListener;
 import com.lib.bandaid.arcruntime.core.draw.DrawSymbol;
 import com.lib.bandaid.arcruntime.core.draw.DrawType;
 import com.lib.bandaid.arcruntime.core.draw.GeometryChangedListener;
-import com.lib.bandaid.arcruntime.core.draw.Subject;
 import com.lib.bandaid.arcruntime.core.draw.ValueCallback;
 import com.lib.bandaid.arcruntime.event.EasyMapEvent;
-import com.lib.bandaid.arcruntime.event.IArcMapEvent;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -52,21 +45,12 @@ public class SketchTool extends BaseContainer {
     private GraphicsOverlay tempLayer;//零时图层，用于存储要素各个节点信息
     private int drawType;//当前要素绘制类型
     private boolean active;
-    private boolean isAllowDoubleTouchToEnd = true;//是否允许双击结束绘制
     private EnvelopeBuilder envelopeBuilder;
     private DrawTouchListener drawListener;//绘图事件
     private Graphic drawGraphic;//当前绘制要素
     private Point startPoint;//当前绘制要素起点信息
 
-    private boolean isCompleteDraw = true;//是否完成要素绘制
-
     //=======================================================================================================
-    ArrayList<Point> mPoints = new ArrayList<>(); //节点
-    ArrayList<Point> mMidPoints = new ArrayList<>(); //中间点
-    boolean mMidPointSelected = false; //线段中间点
-    boolean mVertexSelected = false;//顶点是否选择
-    int mInsertingIndex;//插入位置信息
-    ArrayList<EditingStates> mEditingStates = new ArrayList<>();//编辑状态信息
     private PointCollection pointCollection;
 
     public SketchEditor sketchEditor;
@@ -151,7 +135,6 @@ public class SketchTool extends BaseContainer {
                 break;
         }
 
-        isCompleteDraw = false;//开始绘制
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -159,7 +142,6 @@ public class SketchTool extends BaseContainer {
         //取消事件
         arcMap.setEvent(null);
         this.active = false;
-        this.isCompleteDraw = true;//完成绘制
         this.drawType = -1;
         this.drawGraphic = null;
         this.startPoint = null;
@@ -188,139 +170,9 @@ public class SketchTool extends BaseContainer {
         if (tempLayer != null) {
             tempLayer.getGraphics().clear();
         }
-        drawMidPoints(); //绘制要素中心点
-        drawVertices(); //绘制要素节点
-    }
-
-    /**
-     * 绘制节点的中心点
-     */
-    private void drawMidPoints() {
-        int index;
-        Graphic graphic;
-
-        mMidPoints.clear();
-        if (mPoints.size() > 1) {
-
-            // Build new list of mid-points
-            for (int i = 1; i < mPoints.size(); i++) {
-                Point p1 = mPoints.get(i - 1);
-                Point p2 = mPoints.get(i);
-                mMidPoints.add(new Point((p1.getX() + p2.getX()) / 2, (p1.getY() + p2.getY()) / 2));
-            }
-            if (drawType == DrawType.POLYGON && mPoints.size() > 2) {
-                // Complete the circle
-                Point p1 = mPoints.get(0);
-                Point p2 = mPoints.get(mPoints.size() - 1);
-                mMidPoints.add(new Point((p1.getX() + p2.getX()) / 2, (p1.getY() + p2.getY()) / 2));
-            }
-
-            // Draw the mid-points
-            index = 0;
-            for (Point pt : mMidPoints) {
-                if (mMidPointSelected && mInsertingIndex == index) {
-                    graphic = new Graphic(pt, DrawSymbol.mRedMarkerSymbol);
-                } else {
-                    graphic = new Graphic(pt, DrawSymbol.mGreenMarkerSymbol);
-                }
-                this.tempLayer.getGraphics().add(graphic);
-                index++;
-            }
-        }
-    }
-
-    /**
-     * 绘制要素的节点信息在mPoints中.
-     */
-    private void drawVertices() {
-        int index = 0;
-        SimpleMarkerSymbol symbol;
-
-        for (Point pt : mPoints) {
-            if (mVertexSelected && index == mInsertingIndex) {
-                // This vertex is currently selected so make it red
-                symbol = DrawSymbol.mRedMarkerSymbol;
-            } else if (index == mPoints.size() - 1 && !mMidPointSelected && !mVertexSelected) {
-                // Last vertex and none currently selected so make it red
-                symbol = DrawSymbol.mRedMarkerSymbol;
-            } else {
-                // Otherwise make it black
-                symbol = DrawSymbol.mBlackMarkerSymbol;
-            }
-            Graphic graphic = new Graphic(pt, symbol);
-            tempLayer.getGraphics().add(graphic);//添加节点信息到零时图层
-            index++;
-        }
-    }
-
-    /**
-     * 清除节点和终点信息
-     */
-    private void clear() {
-        // 清除要素编辑状态数据
-        mPoints.clear();
-        mMidPoints.clear();
-        mEditingStates.clear();
-
-        mMidPointSelected = false;
-        mVertexSelected = false;
-        mInsertingIndex = 0;
-
-        if (tempLayer != null) {
-            tempLayer.getGraphics().clear();
-        }
     }
 
 
-    /**
-     * 节点回退操作.
-     */
-    public boolean actionUndo() {
-        if (active && (drawType == DrawType.POLYGON || drawType == DrawType.POLYLINE)) {
-            if (mPoints.size() >= 1) {//删除时至少保留一个节点
-                if (mEditingStates.size() >= 1) {
-                    if (mEditingStates.size() == 0) {
-                        mMidPointSelected = false;
-                        mVertexSelected = false;
-                        mInsertingIndex = 0;
-                    } else {
-                        mPoints.clear();//清空节点要素
-                        EditingStates state = mEditingStates.get(mEditingStates.size() - 1);
-                        mPoints.addAll(state.points);
-                        //Log.d(TAG, "# of points = " + mPoints.size());
-                        mMidPointSelected = state.midPointSelected;
-                        mVertexSelected = state.vertexSelected;
-                        mInsertingIndex = state.insertingIndex;
-                        refresh();
-                        mEditingStates.remove(mEditingStates.size() - 1);
-                        Toast.makeText(mapView.getContext(), "撤销操作", Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                } else {
-                    Toast.makeText(mapView.getContext(), "当前状态无法撤销", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 当一个新的点被添加/移动/删除时该实例被创建
-     * 用于记录编辑的状态信息，用于允许编辑的回退操作
-     */
-    private class EditingStates {
-        ArrayList<Point> points = new ArrayList<>();
-        boolean midPointSelected = false;
-        boolean vertexSelected = false;
-        int insertingIndex;
-
-        public EditingStates(ArrayList<Point> points, boolean midpointselected, boolean vertexselected, int insertingindex) {
-            this.points.addAll(points);
-            this.midPointSelected = midpointselected;
-            this.vertexSelected = vertexselected;
-            this.insertingIndex = insertingindex;
-        }
-    }
 
     /**
      * 扩展MapOnTouchListener，实现画图功能
@@ -398,151 +250,17 @@ public class SketchTool extends BaseContainer {
             return super.onFling(from, to, velocityX, velocityY);
         }
 
-        @Override
-        public boolean onDoubleTap(MotionEvent event) {
-            if (active && (drawType == DrawType.POLYGON || drawType == DrawType.POLYLINE)) {
-                int ptNum = mPoints.size();
-                if (drawType == DrawType.POLYLINE) {
-                    if (ptNum < 2) {
-                        Toast.makeText(mapView.getContext(), "线段至少两个节点", Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                } else if (drawType == DrawType.POLYGON) {
-                    if (ptNum < 3) {
-                        Toast.makeText(mapView.getContext(), "面至少三个节点", Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                }
-                isCompleteDraw = true;//开始绘制
-                if (isAllowDoubleTouchToEnd) {
-                    sendDrawEndEvent();
-                    startPoint = null;
-                }
-                return true;
-            }
-            return super.onDoubleTap(event);
-        }
-
-        /***
-         * Handle a tap on the map (or the end of a magnifier long-press event).
-         * @param event The point that was tapped.
-         */
-        private boolean handleTap(MotionEvent event) {
-            Point point = toMapPoint(event);
-            if (active && (drawType == DrawType.POLYGON || drawType == DrawType.POLYLINE)) {
-                // If a point is currently selected, move that point to tap point
-                if (mMidPointSelected || mVertexSelected) {
-                    movePoint(point);
-                } else {
-                    // If tap coincides with a mid-point, select that mid-point
-                    int idx1 = getSelectedIndex(event.getX(), event.getY(), mMidPoints, mapView);
-                    if (idx1 != -1) {
-                        mMidPointSelected = true;
-                        mInsertingIndex = idx1;
-                    } else {
-                        // If tap coincides with a vertex, select that vertex
-                        int idx2 = getSelectedIndex(event.getX(), event.getY(), mPoints, mapView);
-                        if (idx2 != -1) {
-                            mVertexSelected = true;
-                            mInsertingIndex = idx2;
-                        } else {
-                            // No matching point above, add new vertex at tap point
-                            mEditingStates.add(new EditingStates(mPoints, mMidPointSelected, mVertexSelected, mInsertingIndex));
-                            mPoints.add(point);
-                        }
-                    }
-                }
-                refresh();
-                return true;
-            } else if (drawType == DrawType.POINT) {
-                //DrawTool.this.point.setXY(point.getX(), point.getY());
-                sendDrawEndEvent();
-                isCompleteDraw = true;//开始绘制
-                return true;
-            }
-            return false;//默认为false
-        }
-
-
-        /**
-         * Checks if a given location coincides (within a tolerance) with a point in a given array.
-         *
-         * @param x      Screen coordinate of location to check.
-         * @param y      Screen coordinate of location to check.
-         * @param points Array of points to check.
-         * @param map    MapView containing the points.
-         * @return Index within points of matching point, or -1 if none.
-         */
-        private int getSelectedIndex(double x, double y, ArrayList<Point> points, MapView map) {
-            final int TOLERANCE = 40; // Tolerance in pixels
-
-            if (points == null || points.size() == 0) {
-                return -1;
-            }
-
-            // Find closest point
-            int index = -1;
-            double distSQ_Small = Double.MAX_VALUE;
-            for (int i = 0; i < points.size(); i++) {
-                Point p = points.get(i);
-                double diffx = p.getX() - x;
-                double diffy = p.getY() - y;
-                double distSQ = diffx * diffx + diffy * diffy;
-                if (distSQ < distSQ_Small) {
-                    index = i;
-                    distSQ_Small = distSQ;
-                }
-            }
-
-            // Check if it's close enough
-            if (distSQ_Small < (TOLERANCE * TOLERANCE)) {
-                return index;
-            }
-            return -1;
-        }
-
-        /**
-         * 移动当前选择点
-         *
-         * @param point Location to move the point to.
-         */
-        private void movePoint(Point point) {
-            if (mMidPointSelected) {
-                // Move mid-point to the new location and make it a vertex
-                mPoints.add(mInsertingIndex + 1, point);
-            } else {
-                // Must be a vertex: move it to the new location
-                ArrayList<Point> temp = new ArrayList<Point>();
-                for (int i = 0; i < mPoints.size(); i++) {
-                    if (i == mInsertingIndex) {
-                        temp.add(point);
-                    } else {
-                        temp.add(mPoints.get(i));
-                    }
-                }
-                mPoints.clear();
-                mPoints.addAll(temp);
-            }
-            // Go back to the normal drawing mode and save the new editing state
-            mMidPointSelected = false;
-            mVertexSelected = false;
-            mEditingStates.add(new EditingStates(mPoints, mMidPointSelected, mVertexSelected, mInsertingIndex));
-        }
-
     }
 
     private Point toMapPoint(MotionEvent event) {
-        Point point = mapView.screenToLocation(new android.graphics.Point((int) event.getX(), (int) event.getY()));
-        return point;
+        return mapView.screenToLocation(new android.graphics.Point((int) event.getX(), (int) event.getY()));
     }
 
 
     private void getCircle(Point point, double radius) {
         Point[] points = getPoints(point, radius);
         pointCollection.clear();
-        for (Point p : points) {
-            pointCollection.add(p);
-        }
+        pointCollection.addAll(Arrays.asList(points));
         Polygon polygon = new Polygon(pointCollection);
 
         SimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
