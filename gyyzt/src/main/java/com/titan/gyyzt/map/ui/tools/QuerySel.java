@@ -26,6 +26,8 @@ import java.util.List;
 
 public class QuerySel extends BaseTool {
 
+    FrameQuery frameQuery;
+
     public QuerySel() {
         id = getClass().getSimpleName();
         name = "查询";
@@ -49,7 +51,9 @@ public class QuerySel extends BaseTool {
                 arcMap.getSketchTool().setCallBack(new ValueCallback() {
                     @Override
                     public void onGeometry(Geometry geometry) {
-                        System.out.println(geometry);
+                        queryByGeometry(geometry);
+                        frameQuery = (FrameQuery) arcMap.getWidgetContainer().getWidget(FrameQuery.class);
+                        frameQuery.show();
                     }
                 });
                 arcMap.getSketchTool().activate((int) o);
@@ -61,5 +65,42 @@ public class QuerySel extends BaseTool {
     public void deactivate() {
         super.deactivate();
         arcMap.getSketchTool().deactivate();
+    }
+
+
+
+    public void queryByGeometry(Geometry geometry) {
+        List<LayerNode> nodes = arcMap.getTocContainer().getLayerNodes();
+        List<LayerNode> leftNodes;
+        QueryParameters queryParameters;
+        for (LayerNode node : nodes) {
+            leftNodes = node.getLeftNode();
+            for (LayerNode leftNode : leftNodes) {
+                if (!leftNode.getVisible() || !leftNode.isValid()) continue;
+                queryParameters = new QueryParameters();
+                queryParameters.setGeometry(geometry);
+                arcMap.getQueryContainer().queryFeatures(leftNode, queryParameters, new QueryContainer.ICallBack() {
+                    @Override
+                    public void ready() {
+
+                    }
+
+                    @Override
+                    public void success(List<Feature> features) {
+                        List<FeatureTaker<LayerNode>> list = FeatureUtil.convertFeatureTaker(features);
+                        for (FeatureTaker taker : list) {
+                            taker.setData(leftNode);
+                        }
+                        frameQuery.appendFeatures(list);
+                    }
+
+                    @Override
+                    public void fail(Exception e) {
+                        e.printStackTrace();
+                        System.out.println(leftNode.getUri());
+                    }
+                });
+            }
+        }
     }
 }
