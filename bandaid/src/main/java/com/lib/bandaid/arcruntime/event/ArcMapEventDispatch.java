@@ -11,7 +11,7 @@ import com.lib.bandaid.arcruntime.core.ArcMap;
  * Created by zy on 2019/5/28.
  */
 
-public class ArcMapEventDispatch extends DefaultMapViewOnTouchListener {
+public class ArcMapEventDispatch extends DefaultMapViewOnTouchListener implements IArcMapExtendEvent {
 
     public ArcMapEventDispatch(ArcMap arcMap) {
         super(arcMap.getContext(), arcMap.getMapView());
@@ -143,5 +143,26 @@ public class ArcMapEventDispatch extends DefaultMapViewOnTouchListener {
     public void onShowPress(MotionEvent e) {
         if (iMapEvent != null) iMapEvent.onShowPress(e);
         super.onShowPress(e);
+    }
+
+    @Override
+    public boolean onTouchStart(MotionEvent motionEvent) {
+        if (iMapEvent != null)
+            if (iMapEvent.onTouchStart(motionEvent)) return true;
+        return false;
+    }
+
+    @Override
+    public boolean onTouchMoving(MotionEvent motionEvent) {
+        if (iMapEvent != null)
+            if (iMapEvent.onTouchMoving(motionEvent)) return true;
+        return false;
+    }
+
+    @Override
+    public boolean onTouchCancel(MotionEvent motionEvent) {
+        if (iMapEvent != null)
+            if (iMapEvent.onTouchCancel(motionEvent)) return true;
+        return false;
     }
 }

@@ -82,11 +82,34 @@ public class ToolContainer extends BaseContainer {
 
     @Override
     public void activate(Object o) {
-        if (o instanceof IArcMapEvent) arcMap.setEvent((IArcMapEvent) o);
+        boolean isRegisterMapEvent = false;
+        if (o instanceof BaseTool) {
+            ToolGroup toolGroup;
+            BaseTool baseTool = (BaseTool) o;
+            BaseTool _baseTool;
+            isRegisterMapEvent = baseTool.isRegisterMapEvent();
+            for (int i = 0; i < _toolGroups.size(); i++) {
+                toolGroup = _toolGroups.get(i);
+                for (int j = 0; j < toolGroup.getCount(); j++) {
+                    _baseTool = toolGroup.getItem(j);
+                    if (baseTool != null) {
+                        if (_baseTool.getId().equals(baseTool.getId())) continue;
+                    }
+                    if (isRegisterMapEvent == _baseTool.isRegisterMapEvent()) {
+                        _baseTool.deactivate();
+                    }
+                }
+            }
+        }
+        if (isRegisterMapEvent) {
+            if (o instanceof IArcMapEvent) arcMap.setEvent((IArcMapEvent) o);
+        }
     }
 
     @Override
     public void deactivate(Object o) {
-        arcMap.setEvent(null);
+        if (o instanceof BaseTool) {
+            if (((BaseTool) o).isRegisterMapEvent()) arcMap.setEvent(null);
+        }
     }
 }

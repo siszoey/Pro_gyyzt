@@ -9,6 +9,9 @@ import android.view.View;
  */
 
 public class EasyMapEvent implements IArcMapEvent {
+    protected boolean isMapTouch;
+
+
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         return false;
@@ -26,6 +29,7 @@ public class EasyMapEvent implements IArcMapEvent {
 
     @Override
     public boolean onDown(MotionEvent e) {
+        isMapTouch = true;
         return false;
     }
 
@@ -92,5 +96,21 @@ public class EasyMapEvent implements IArcMapEvent {
     @Override
     public void onShowPress(MotionEvent e) {
 
+    }
+
+    @Override
+    public boolean onTouchStart(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onTouchMoving(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onTouchCancel(MotionEvent motionEvent) {
+        isMapTouch = false;
+        return false;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -90,6 +91,27 @@ public class ArcMap extends RelativeLayout implements LoadStatusChangedListener,
         this.arcMapEventDispatch = new ArcMapEventDispatch(this);
         //注册地图事件
         this.mapView.setOnTouchListener(arcMapEventDispatch);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        IArcMapEvent iMapEvent = arcMapEventDispatch.getCurIMapEvent();
+        boolean continueDispatch;
+        if (iMapEvent == null) return super.dispatchTouchEvent(ev);
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            continueDispatch = iMapEvent.onTouchStart(ev);
+            if (continueDispatch) return true;
+        }
+        if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+            continueDispatch = iMapEvent.onTouchMoving(ev);
+            if (continueDispatch) return true;
+        }
+        if (ev.getAction() == MotionEvent.ACTION_UP ||
+                ev.getAction() == MotionEvent.ACTION_CANCEL) {
+            continueDispatch = iMapEvent.onTouchCancel(ev);
+            if (continueDispatch) return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     void setEvent(IArcMapEvent event) {

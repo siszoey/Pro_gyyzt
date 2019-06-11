@@ -8,6 +8,7 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.lib.bandaid.arcruntime.core.QueryContainer;
+import com.lib.bandaid.arcruntime.core.draw.ValueCallback;
 import com.lib.bandaid.arcruntime.layer.project.LayerNode;
 import com.lib.bandaid.arcruntime.tools.core.BaseTool;
 import com.lib.bandaid.arcruntime.util.FeatureTaker;
@@ -30,22 +31,45 @@ public class QuerySel extends BaseTool {
         name = "查询";
         resId = R.mipmap.tool_map_identify_nomal;
         checkedResId = R.mipmap.tool_map_identify_pressed;
+        isRegisterMapEvent = false;
     }
 
     @Override
     public boolean isCheckBtn() {
-        return false;
+        return true;
     }
 
     @Override
-    public void viewClick(View view) {
-        super.viewClick(view);
-        DrawDialog.newInstance(new DrawDialog.ICallBack() {
+    public void activate() {
+        super.activate();
 
+        DrawDialog.newInstance(new DrawDialog.ICallBack() {
             @Override
             public void callback(Object o) {
+                arcMap.getSketchTool().setCallBack(new ValueCallback() {
+                    @Override
+                    public void onSuccess(Object t) {
+                        System.out.println(t);
+                    }
+
+                    @Override
+                    public void onFail(String value) {
+
+                    }
+
+                    @Override
+                    public void onGeometry(Geometry geometry) {
+                        System.out.println(geometry);
+                    }
+                });
                 arcMap.getSketchTool().activate((int) o);
             }
         }).show(context);
+    }
+
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        arcMap.getSketchTool().deactivate();
     }
 }

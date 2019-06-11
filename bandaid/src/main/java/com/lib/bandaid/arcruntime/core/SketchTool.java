@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.esri.arcgisruntime.geometry.EnvelopeBuilder;
+import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
@@ -16,6 +17,8 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SketchCreationMode;
 import com.esri.arcgisruntime.mapping.view.SketchEditor;
+import com.esri.arcgisruntime.mapping.view.SketchGeometryChangedEvent;
+import com.esri.arcgisruntime.mapping.view.SketchGeometryChangedListener;
 import com.esri.arcgisruntime.mapping.view.SketchStyle;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -37,7 +40,7 @@ import java.util.Vector;
  * Created by zy on 2019/6/5.
  */
 
-public class SketchTool extends BaseContainer {
+public class SketchTool extends BaseContainer implements SketchGeometryChangedListener {
 
     private static String TAG = "DrawTool";
 
@@ -88,7 +91,6 @@ public class SketchTool extends BaseContainer {
         //申请地图事件占用
         arcMap.setEvent(drawListener);
 
-
         this.drawType = drawType;
         this.active = true;
         if (sketchEditor == null) {
@@ -101,8 +103,7 @@ public class SketchTool extends BaseContainer {
             sketchStyle.setLineSymbol(DrawSymbol.mLineSymbol);
             sketchStyle.setFillSymbol(DrawSymbol.mFillSymbol);
             sketchEditor.setSketchStyle(sketchStyle);
-
-            sketchEditor.addGeometryChangedListener(new GeometryChangedListener(mapView, callBack));
+            sketchEditor.addGeometryChangedListener(this);
 
             mapView.setSketchEditor(sketchEditor);
         }
@@ -140,6 +141,7 @@ public class SketchTool extends BaseContainer {
     @SuppressLint("ClickableViewAccessibility")
     public void deactivate() {
         //取消事件
+        if (sketchEditor != null) sketchEditor.stop();
         arcMap.setEvent(null);
         this.active = false;
         this.drawType = -1;
@@ -172,12 +174,38 @@ public class SketchTool extends BaseContainer {
         }
     }
 
+    boolean isGeoChanged = false;
+
+    @Override
+    public void geometryChanged(SketchGeometryChangedEvent sketchGeometryChangedEvent) {
+        isGeoChanged = true;
+    }
 
 
     /**
      * 扩展MapOnTouchListener，实现画图功能
      */
     class DrawTouchListener extends EasyMapEvent {
+
+        @Override
+        public boolean onTouchMoving(MotionEvent motionEvent) {
+            isGeoChanged = false;
+            return super.onTouchMoving(motionEvent);
+        }
+
+        @Override
+        public boolean onTouchCancel(MotionEvent motionEvent) {
+            if (drawType == DrawType.CIRCLE || drawType == DrawType.ENVELOPE) {
+                if (drawGraphic != null && isMapTouch) {
+                    if (callBack != null) callBack.onGeometry(drawGraphic.getGeometry());
+                }
+            } else {
+                if (sketchEditor != null && isGeoChanged && sketchEditor.isSketchValid()) {
+                    if (callBack != null) callBack.onGeometry(sketchEditor.getGeometry());
+                }
+            }
+            return super.onTouchCancel(motionEvent);
+        }
 
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -194,19 +222,6 @@ public class SketchTool extends BaseContainer {
                 }
             }
             return super.onTouch(view, event);
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public boolean onUp(MotionEvent e) {
-            if (drawGraphic != null) {
-                if (callBack != null) callBack.onGeometry(drawGraphic.getGeometry());
-            }
-            return true;
         }
 
         @Override

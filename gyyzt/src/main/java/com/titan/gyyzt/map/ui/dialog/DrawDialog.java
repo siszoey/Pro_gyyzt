@@ -67,7 +67,7 @@ public class DrawDialog extends BaseDialogFrg implements View.OnClickListener {
             if (iCallBack != null) iCallBack.callback(DrawType.ENVELOPE);
         }
         if (v.getId() == R.id.ivDrawPolygon) {
-            if (iCallBack != null) iCallBack.callback(DrawType.POLYGON);
+            if (iCallBack != null) iCallBack.callback(DrawType.FREEHAND_POLYGON);
         }
         dismiss();
     }

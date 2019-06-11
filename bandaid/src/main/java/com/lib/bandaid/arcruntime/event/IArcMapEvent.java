@@ -8,7 +8,7 @@ import android.view.View;
  * Created by zy on 2019/5/28.
  */
 
-public interface IArcMapEvent {
+public interface IArcMapEvent extends IArcMapExtendEvent {
 
     public boolean onDoubleTap(MotionEvent e);
 

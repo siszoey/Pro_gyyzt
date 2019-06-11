@@ -248,4 +248,19 @@ public abstract class BaseTool implements IP, ITool, ToolView.IClick, IArcMapEve
     public void onShowPress(MotionEvent e) {
 
     }
+
+    @Override
+    public boolean onTouchStart(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onTouchMoving(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onTouchCancel(MotionEvent motionEvent) {
+        return false;
+    }
 }

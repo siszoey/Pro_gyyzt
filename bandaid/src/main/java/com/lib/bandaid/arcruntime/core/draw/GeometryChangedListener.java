@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.esri.arcgisruntime.geometry.Geometry;
-import com.esri.arcgisruntime.geometry.GeometryType;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SketchGeometryChangedEvent;
@@ -25,16 +24,11 @@ public class GeometryChangedListener implements SketchGeometryChangedListener {
     public void geometryChanged(SketchGeometryChangedEvent event) {
         boolean b = event.getSource().isSketchValid();
         Geometry geometry = event.getGeometry();
-        boolean flag = false;
-        if (geometry != null) {
-            flag = (geometry.getGeometryType() == GeometryType.POINT);
-        }
-        if (b && flag) {
+        if (b) {
             callBack.onGeometry(geometry);
         } else {
-            setListener();
+            //setListener();
         }
-
     }
 
 
