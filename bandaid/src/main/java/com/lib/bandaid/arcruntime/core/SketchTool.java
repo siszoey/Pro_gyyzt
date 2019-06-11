@@ -147,6 +147,11 @@ public class SketchTool extends BaseContainer implements SketchGeometryChangedLi
         this.drawType = -1;
         this.drawGraphic = null;
         this.startPoint = null;
+
+        this.mGraphicsLayerEditing.getGraphics().clear();
+        this.tempLayer.getGraphics().clear();
+
+
     }
 
 
