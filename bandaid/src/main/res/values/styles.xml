@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--create by zy-->
+    <style name="common_tool_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/tool_bar_height</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="common_tool_bar_style_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
+    </style>
+
+    <style name="common_tool_bar_style_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">right|center</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <!-- view分割线样式 -->
     <style name="h_line">
         <item name="android:layout_width">match_parent</item>

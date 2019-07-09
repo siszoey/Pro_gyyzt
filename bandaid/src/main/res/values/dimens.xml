@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="tool_bar_height">45dp</dimen>
+    <dimen name="header_text_size">18sp</dimen>
+</resources>

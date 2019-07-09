@@ -3,6 +3,8 @@
  */
 package com.lib.bandaid.arcruntime.layer.info;
 
+import java.util.List;
+
 /**
  * Auto-generated: 2019-06-04 14:6:24
  *
@@ -13,7 +15,7 @@ public class DrawingInfo {
 
     private Renderer renderer;
     private int transparency;
-    private String labelingInfo;
+    private List<LabelingInfo> labelingInfo;
 
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
@@ -31,12 +33,11 @@ public class DrawingInfo {
         return transparency;
     }
 
-    public void setLabelingInfo(String labelingInfo) {
-        this.labelingInfo = labelingInfo;
-    }
-
-    public String getLabelingInfo() {
+    public List<LabelingInfo> getLabelingInfo() {
         return labelingInfo;
     }
 
+    public void setLabelingInfo(List<LabelingInfo> labelingInfo) {
+        this.labelingInfo = labelingInfo;
+    }
 }
